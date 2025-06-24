@@ -7,4 +7,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   saveFile: (filePath, content) => ipcRenderer.invoke('save-file', { filePath, content }),
   openDirectory: () => ipcRenderer.invoke('open-directory'),
   readFile: (filePath) => ipcRenderer.invoke('read-file', filePath),
+  openSettingsWindow: () => ipcRenderer.invoke('open-settings-window'),
+  getSetting: (key) => ipcRenderer.invoke('get-setting', key),
+  setSetting: (key, value) => ipcRenderer.invoke('set-setting', { key, value }),
+  onThemeChanged: (callback) => ipcRenderer.on('theme-changed', (_event, value) => callback(value)),
+  themeUpdated: (theme) => ipcRenderer.send('theme-updated', theme),
 });

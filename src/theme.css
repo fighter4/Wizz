@@ -1,0 +1,17 @@
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --toolbar-background: #f0f0f0;
+  --button-background: #e0e0e0;
+  --button-hover-background: #d0d0d0;
+  --border-color: #cccccc;
+}
+
+[data-theme='dark'] {
+  --background-color: #1e1e1e;
+  --text-color: #d4d4d4;
+  --toolbar-background: #333333;
+  --button-background: #4f4f4f;
+  --button-hover-background: #5a5a5a;
+  --border-color: #333333;
+}

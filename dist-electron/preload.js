@@ -1,1 +1,0 @@
-"use strict";const{contextBridge:n,ipcRenderer:e}=require("electron");n.exposeInMainWorld("electronAPI",{getApiKey:()=>e.invoke("get-api-key"),openFile:()=>e.invoke("open-file"),saveFile:(i,o)=>e.invoke("save-file",{filePath:i,content:o}),openDirectory:()=>e.invoke("open-directory"),readFile:i=>e.invoke("read-file",i)});

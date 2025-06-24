@@ -27,6 +27,7 @@ const tabBar = document.getElementById('tab-bar');
 const openFileBtn = document.getElementById('open-file-btn');
 const saveFileBtn = document.getElementById('save-file-btn');
 const openDirBtn = document.getElementById('open-dir-btn');
+const settingsBtn = document.getElementById('settings-btn');
 const fileExplorer = document.getElementById('file-explorer');
 const chatForm = document.getElementById('chat-input-form');
 const chatInput = document.getElementById('chat-input');
@@ -141,6 +142,10 @@ openDirBtn.addEventListener('click', async () => {
   }
 });
 
+settingsBtn.addEventListener('click', () => {
+  window.electronAPI.openSettingsWindow();
+});
+
 function createTree(item) {
   const ul = document.createElement('ul');
   ul.style.paddingLeft = '15px';
@@ -166,6 +171,19 @@ function createTree(item) {
   }
   return ul;
 }
+
+// --- Theme Management ---
+function applyTheme(theme) {
+  document.body.setAttribute('data-theme', theme || 'dark');
+  // Also update Monaco Editor's theme
+  monaco.editor.setTheme(theme === 'light' ? 'vs' : 'vs-dark');
+}
+
+// Load initial theme
+window.electronAPI.getSetting('theme').then(applyTheme);
+
+// Listen for theme changes
+window.electronAPI.onThemeChanged(applyTheme);
 
 // --- Gemini Chat Logic ---
 let genAI, model;

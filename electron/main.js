@@ -1,10 +1,14 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const { autoUpdater } = require('electron-updater');
+
 const path = require('path');
 const fs = require('fs');
 require('dotenv').config({ path: path.resolve(process.cwd(), '.env') });
 
+let store;
+
 let win;
+let settingsWin;
 
 function createWindow() {
   win = new BrowserWindow({
@@ -23,7 +27,10 @@ function createWindow() {
   }
 }
 
-app.on('ready', () => {
+app.whenReady().then(async () => {
+  const { default: Store } = await import('electron-store');
+  store = new Store();
+
   createWindow();
   autoUpdater.checkForUpdatesAndNotify();
 });
@@ -108,4 +115,46 @@ ipcMain.handle('read-file', async (event, filePath) => {
         console.error('Failed to read file:', error);
         return null;
     }
+});
+
+function createSettingsWindow() {
+  settingsWin = new BrowserWindow({
+    width: 800,
+    height: 600,
+    parent: win,
+    modal: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.js'),
+    },
+  });
+
+  const VITE_DEV_SERVER_URL = process.env['VITE_DEV_SERVER_URL'];
+  if (VITE_DEV_SERVER_URL) {
+    settingsWin.loadURL(`${VITE_DEV_SERVER_URL}/settings.html`);
+  } else {
+    settingsWin.loadFile(path.join(__dirname, '..', 'dist', 'settings.html'));
+  }
+
+  settingsWin.on('closed', () => {
+    settingsWin = null;
+  });
+}
+
+// IPC Handlers for settings
+ipcMain.handle('open-settings-window', () => {
+  if (!settingsWin) {
+    createSettingsWindow();
+  }
+});
+
+ipcMain.handle('get-setting', async (event, key) => {
+  return store.get(key);
+});
+
+ipcMain.handle('set-setting', async (event, { key, value }) => {
+  store.set(key, value);
+});
+
+ipcMain.on('theme-updated', (event, theme) => {
+  win.webContents.send('theme-changed', theme);
 });
