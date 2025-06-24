@@ -1,0 +1,45 @@
+{
+  "name": "wizz",
+  "version": "1.0.0",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && electron-builder",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "electron": "^31.1.0",
+    "electron-builder": "^24.13.3",
+    "vite": "^5.3.3",
+    "vite-plugin-electron": "^0.28.7"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "dotenv": "^16.5.0",
+    "electron-updater": "^6.6.2",
+    "monaco-editor": "^0.52.2"
+  },
+  "build": {
+    "appId": "com.wizz.app",
+    "productName": "Wizz",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "fighter4",
+      "repo": "Wizz"
+    }
+  }
+}
